@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 android {
@@ -56,4 +57,18 @@ dependencies {
     // Paging Compose
     implementation "com.google.accompanist:accompanist-pager:0.13.0"
 
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication){
+                from components.release
+
+                groupId = 'com.github.KapilYadav-dev'
+                artifactId ='Compose-Intro'
+                version = '1.0'
+            }
+        }
+    }
 }
