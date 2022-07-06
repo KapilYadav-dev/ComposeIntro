@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,28 +20,28 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun IntroScreen(
-    navController: NavController,
-    scope: CoroutineScope,
     introItems: List<IntroData>,
     infiniteLoop: Boolean = false,
     primaryColor: Color = Color(0xfffFF6464),
     secondaryColor: Color = Color(0xfffBABABA),
     primaryFont: FontFamily = BebasNue(),
     secondaryFont: FontFamily = Poppins(),
-    headerIcon: ImageVector
+    headerIcon: ImageVector,
+    onRightButtonClick: () -> Unit,
+    onLeftButtonClick: () -> Unit,
+    onBackPress: () -> Unit,
+    leftButtonText: String = "REGISTER",
+    rightButtonText: String = "LOGIN",
 ) {
-
-
+    val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
         pageCount = introItems.size,
         initialOffscreenLimit = 2,
@@ -54,7 +55,7 @@ fun IntroScreen(
             }
             return@BackHandler
         }
-        navController.navigate("splash")
+        onBackPress()
     }
 
 
@@ -103,9 +104,7 @@ fun IntroScreen(
                                 primaryColor
                             ) else BorderStroke(4.dp, secondaryColor),
                             onClick = {
-                                navController.navigate("register") {
-                                    popUpTo(0)
-                                }
+                                onLeftButtonClick()
                             },
                             modifier = Modifier
                                 .height(40.dp)
@@ -113,7 +112,7 @@ fun IntroScreen(
                             enabled = page == 2
                         ) {
                             Text(
-                                text = "REGISTER",
+                                text = leftButtonText,
                                 fontFamily = primaryFont,
                                 fontSize = 18.sp,
                                 color = if (page == 2) primaryColor else secondaryColor
@@ -123,9 +122,7 @@ fun IntroScreen(
                         Button(
                             onClick = {
                                 scope.launch {
-                                    navController.navigate("login") {
-                                        popUpTo(0)
-                                    }
+                                    onRightButtonClick()
                                 }
                             },
                             modifier = Modifier
@@ -137,7 +134,7 @@ fun IntroScreen(
                             )
                         ) {
                             Text(
-                                text = "LOGIN",
+                                text = rightButtonText,
                                 fontFamily = primaryFont,
                                 fontSize = 18.sp,
                                 color = Color.White
