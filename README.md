@@ -45,7 +45,7 @@ IntroScreen(
     //Right click handler
     onRightButtonClick = { },
     //On backpress handler
-    onBackPress = { }
+    onBackPress = { },
     //Get current Page
     currentPage = { }
 )
