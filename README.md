@@ -32,7 +32,7 @@ dependencies {
 
 ```
 
-### 3. Use `IntroScreen` composable
+### 2. Use `IntroScreen` composable
 ```kotlin
 // These are the must fields.
 IntroScreen(
@@ -46,8 +46,53 @@ IntroScreen(
     onRightButtonClick = { },
     //On backpress handler
     onBackPress = { }
+    //Get current Page
+    currentPage = { }
 )
    
+```
+### 3. `IntroScreen` composable all params
+```kotlin
+fun IntroScreen(
+    items: List<IntroData>,
+    infiniteLoop: Boolean = false,
+    /*
+     * These are the color which will shape the color of UI
+     */
+    headerIconTint: Color = Color(0xfffFF6464),
+    primaryColor: Color = Color(0xfffFF6464),
+    secondaryColor: Color = Color(0xfffBABABA),
+    /*
+     * These are the fonts which will shape the fonts of UI
+     */
+    primaryFont: FontFamily = BebasNue(),
+    secondaryFont: FontFamily = Poppins(),
+    /*
+     * This is the header drawable
+     */
+    headerIcon: ImageVector,
+    /*
+     * These are callbacks or high order function which will help to interact with buttons
+     */
+    onRightButtonClick: () -> Unit,
+    onLeftButtonClick: () -> Unit,
+    onBackPress: () -> Unit,
+    currentPage:(Int) -> Unit,
+    /*
+     * These are the text of the buttons
+     */
+    leftButtonText: String = "REGISTER",
+    rightButtonText: String = "LOGIN",
+    /*
+     * These are the units of various text and views
+     */
+    headerIconSize: Dp = 48.dp,
+    primaryFontSize: TextUnit = 56.sp,
+    secondaryFontSize: TextUnit = 15.sp,
+    highlightFontSize: TextUnit = 40.sp,
+    unhighlightFontSize: TextUnit = 20.sp,
+    buttonFontSize: TextUnit = 18.sp,
+)
 ```
 
 
