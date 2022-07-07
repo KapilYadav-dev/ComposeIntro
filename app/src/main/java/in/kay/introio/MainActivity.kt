@@ -5,6 +5,7 @@ import `in`.kay.composeintro.IntroScreen
 import `in`.kay.introio.ui.theme.IntroioTheme
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,25 +26,32 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+                    val context = LocalContext.current
                     //Usage
                     IntroScreen(
                         //Passing the list
-                        introItems = introItems(),
+                        items = introItems(),
 
                         // Setting the Header icon
                         headerIcon = Icons.Outlined.Password,
                         //Left click handler
                         onLeftButtonClick = {
-                            Log.d("MERATAG", "left: ")
+                            Toast.makeText(context,"Left click", Toast.LENGTH_SHORT).show()
                         },
                         //Right click handler
                         onRightButtonClick = {
-                            Log.d("MERATAG", "Right: ")
+                            Toast.makeText(context,"Right click", Toast.LENGTH_SHORT).show()
                         },
                         //On backpress handler
                         onBackPress = {
+                            Toast.makeText(context,"BackPRess Page", Toast.LENGTH_SHORT).show()
+                        },
+                        //Get current Page
+                        currentPage = {
+                            Toast.makeText(context,"Current Page: $it", Toast.LENGTH_SHORT).show()
+                        },
 
-                        })
+                    )
                 }
             }
         }

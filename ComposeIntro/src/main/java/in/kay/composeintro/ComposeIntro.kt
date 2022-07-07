@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -28,22 +30,48 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun IntroScreen(
-    introItems: List<IntroData>,
+    items: List<IntroData>,
     infiniteLoop: Boolean = false,
+    /*
+     * These are the color which will shape the color of UI
+     */
+    headerIconTint: Color = Color(0xfffFF6464),
     primaryColor: Color = Color(0xfffFF6464),
     secondaryColor: Color = Color(0xfffBABABA),
+    /*
+     * These are the fonts which will shape the fonts of UI
+     */
     primaryFont: FontFamily = BebasNue(),
     secondaryFont: FontFamily = Poppins(),
+    /*
+     * This is the header drawable
+     */
     headerIcon: ImageVector,
+    /*
+     * These are callbacks or high order function which will help to interact with buttons
+     */
     onRightButtonClick: () -> Unit,
     onLeftButtonClick: () -> Unit,
     onBackPress: () -> Unit,
+    currentPage:(Int) -> Unit,
+    /*
+     * These are the text of the buttons
+     */
     leftButtonText: String = "REGISTER",
     rightButtonText: String = "LOGIN",
+    /*
+     * These are the units of various text and views
+     */
+    headerIconSize: Dp = 48.dp,
+    primaryFontSize: TextUnit = 56.sp,
+    secondaryFontSize: TextUnit = 15.sp,
+    highlightFontSize: TextUnit = 40.sp,
+    unhighlightFontSize: TextUnit = 20.sp,
+    buttonFontSize: TextUnit = 18.sp,
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
-        pageCount = introItems.size,
+        pageCount = items.size,
         initialOffscreenLimit = 2,
         initialPage = 0,
         infiniteLoop = infiniteLoop
@@ -58,7 +86,7 @@ fun IntroScreen(
         onBackPress()
     }
 
-
+    currentPage(pagerState.currentPage)
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -74,22 +102,23 @@ fun IntroScreen(
                     Icon(
                         imageVector = headerIcon,
                         modifier = Modifier
-                            .size(48.dp)
+                            .size(headerIconSize)
                             .layoutId("ivIcon"),
                         contentDescription = null,
-                        tint = primaryColor
+                        tint = headerIconTint
                     )
                     Text(
                         color = primaryColor,
                         fontFamily = primaryFont,
-                        text = introItems[page].title,
-                        fontSize = 56.sp, modifier = Modifier.layoutId("tvTitle")
+                        text = items[page].title,
+                        fontSize = primaryFontSize,
+                        modifier = Modifier.layoutId("tvTitle")
                     )
                     Text(
-                        text = introItems[page].description,
+                        text = items[page].description,
                         color = secondaryColor,
                         fontFamily = secondaryFont,
-                        fontSize = 15.sp,
+                        fontSize = secondaryFontSize,
                         modifier = Modifier.layoutId("tvDesc")
                     )
                     Row(
@@ -99,7 +128,7 @@ fun IntroScreen(
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
                         OutlinedButton(
-                            border = if (page == 2) BorderStroke(
+                            border = if (page == items.size - 1) BorderStroke(
                                 4.dp,
                                 primaryColor
                             ) else BorderStroke(4.dp, secondaryColor),
@@ -114,7 +143,7 @@ fun IntroScreen(
                             Text(
                                 text = leftButtonText,
                                 fontFamily = primaryFont,
-                                fontSize = 18.sp,
+                                fontSize = buttonFontSize,
                                 color = if (page == 2) primaryColor else secondaryColor
                             )
                         }
@@ -128,7 +157,7 @@ fun IntroScreen(
                             modifier = Modifier
                                 .height(40.dp)
                                 .weight(1f),
-                            enabled = page == introItems.size - 1,
+                            enabled = page == items.size - 1,
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = primaryColor
                             )
@@ -136,7 +165,7 @@ fun IntroScreen(
                             Text(
                                 text = rightButtonText,
                                 fontFamily = primaryFont,
-                                fontSize = 18.sp,
+                                fontSize = buttonFontSize,
                                 color = Color.White
                             )
                         }
@@ -148,14 +177,24 @@ fun IntroScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         when (page) {
-                            in introItems.indices -> {
-                                for (i in 1..introItems.size) {
+                            in items.indices -> {
+                                for (i in 1..items.size) {
                                     if (i == page + 1) {
-                                        HighlightText(page = page + 1, primaryColor, primaryFont)
+                                        HighlightText(
+                                            page = page + 1,
+                                            primaryColor,
+                                            primaryFont,
+                                            highlightFontSize
+                                        )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         continue
                                     }
-                                    UnhighlightText(page = i, secondaryColor, primaryFont)
+                                    UnhighlightText(
+                                        page = i,
+                                        secondaryColor,
+                                        primaryFont,
+                                        unhighlightFontSize
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
                                 }
                             }
@@ -168,23 +207,33 @@ fun IntroScreen(
 }
 
 @Composable
-fun HighlightText(page: Int, primaryColor: Color, primaryFont: FontFamily) {
+fun HighlightText(
+    page: Int,
+    primaryColor: Color,
+    primaryFont: FontFamily,
+    highlightFontSize: TextUnit
+) {
     Text(
         text = page.toString(),
         color = primaryColor,
         fontFamily = primaryFont,
-        fontSize = 40.sp,
+        fontSize = highlightFontSize,
         modifier = Modifier.fillMaxHeight()
     )
 }
 
 @Composable
-fun UnhighlightText(page: Int, secondaryColor: Color, primaryFont: FontFamily) {
+fun UnhighlightText(
+    page: Int,
+    secondaryColor: Color,
+    primaryFont: FontFamily,
+    unhighlightFontSize: TextUnit
+) {
     Text(
         text = page.toString(),
         color = secondaryColor,
         fontFamily = primaryFont,
-        fontSize = 20.sp
+        fontSize = unhighlightFontSize
     )
 }
 
