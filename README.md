@@ -37,7 +37,7 @@ dependencies {
 // These are the must fields.
 IntroScreen(
     //Passing the list
-    introItems = items,
+    items = items,
     // Setting the Header icon
     headerIcon = Icons.Outlined.Password,
     //Left click handler
